@@ -1,6 +1,6 @@
 package services
 
-import "MovieDistribution/server/models"
+import "MovieDistribution/models"
 
 func HasAccess(d *models.Distributor, region *models.Region) bool {
 	r := region

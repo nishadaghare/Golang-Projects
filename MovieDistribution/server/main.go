@@ -1,23 +1,22 @@
 package main
 
 import (
-	"./services"
+	"MovieDistribution/handlers"
+	"MovieDistribution/services"
 
-	"./models"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-var regions map[string]*models.Region
-var distributors = make(map[string]*models.Distributor)
-
 func main() {
-	regions = services.LoadRegions("cities.csv")
+	handlers.Regions = services.LoadRegions("cities.csv")
 
-	r := gin.Default()
+	router := gin.Default()
 
-	r.POST("/distributor", createDistributor)
-	r.POST("/permission/check", checkPermission)
+	router.Use(cors.Default())
 
-	r.Run(":8080")
+	router.POST("/distributor", handlers.CreateDistributor)
+	router.POST("/permission", handlers.AddPermission)
+	router.POST("/check", handlers.CheckPermission)
+	router.Run(":8080")
 }

@@ -1,9 +1,9 @@
 package services
 
 import (
+	"MovieDistribution/models"
 	"encoding/csv"
 	"os"
-	"yourapp/models"
 )
 
 func LoadRegions(filePath string) map[string]*models.Region {
