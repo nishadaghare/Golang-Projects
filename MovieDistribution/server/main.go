@@ -18,5 +18,12 @@ func main() {
 	router.POST("/distributor", handlers.CreateDistributor)
 	router.POST("/permission", handlers.AddPermission)
 	router.POST("/check", handlers.CheckPermission)
+	router.GET("/regions", func(c *gin.Context) {
+		var list []string
+		for k := range handlers.Regions {
+			list = append(list, k)
+		}
+		c.JSON(200, list)
+	})
 	router.Run(":8080")
 }

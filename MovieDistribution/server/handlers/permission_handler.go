@@ -15,10 +15,23 @@ func CheckPermission(c *gin.Context) {
 		Region string `json:"region"`
 	}
 
-	c.BindJSON(&req)
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 
-	d := Distributors[req.Name]
-	r := Regions[req.Region]
+	d, dOk := Distributors[req.Name]
+	r, rOk := Regions[req.Region]
+
+	if !dOk {
+		c.JSON(400, gin.H{"error": "Distributor not found"})
+		return
+	}
+
+	if !rOk {
+		c.JSON(400, gin.H{"error": "Region not found"})
+		return
+	}
 
 	allowed := services.HasAccess(d, r)
 

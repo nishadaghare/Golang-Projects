@@ -40,9 +40,18 @@ func AddPermission(c *gin.Context) {
 		Region string `json:"region"`
 	}
 
-	c.BindJSON(&req)
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 
-	d := Distributors[req.Name]
+	d, exists := Distributors[req.Name]
+	if !exists {
+		c.JSON(400, gin.H{
+			"error": "Distributor does not exist. Create it first.",
+		})
+		return
+	}
 
 	if req.Type == "include" {
 		d.Includes[req.Region] = true
@@ -50,5 +59,5 @@ func AddPermission(c *gin.Context) {
 		d.Excludes[req.Region] = true
 	}
 
-	c.JSON(200, gin.H{"message": "updated"})
+	c.JSON(200, gin.H{"message": "Permission added"})
 }
